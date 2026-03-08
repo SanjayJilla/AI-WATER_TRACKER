@@ -18,7 +18,7 @@ class WaterIntakeAgent:
         prompt=f"""
         You are a hydration assisstant.The User has consumed  {intake} ml of water today. 
         provide a hydration status and suggest if they need to drink more water.But keep the response concise and actionable.
-        Give a brief analysis of their hydration level based on the intake and provide a recommendation."""
+        Give a brief analysis of their hydration level based on the intake and provide a recommendation.Give it in a way that user should understand clearly"""
         response=llm.invoke([HumanMessage(content=prompt)])
         return response.content.strip()
 if __name__=="__main__":
