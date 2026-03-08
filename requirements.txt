@@ -1,7 +1,10 @@
 langchain==0.1.12
 openai==1.14.1
 llama-index 
-
+langchain-openai
+groq==0.1.0
+sqlite3==0.0.1
+pandas==2.0.3
 fastapi==0.109.2
 uvicorn==0.27.0.post1
 
