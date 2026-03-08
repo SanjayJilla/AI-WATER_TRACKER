@@ -3,7 +3,7 @@ openai==1.14.1
 llama-index 
 langchain-openai
 groq>=0.5.0
-
+langchain-groq
 pandas==2.0.3
 streamlit
 langchain
