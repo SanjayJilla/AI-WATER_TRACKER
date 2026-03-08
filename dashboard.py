@@ -66,7 +66,7 @@ if st.session_state.tracker_started:
         daily_goal = st.sidebar.slider(
             "Set your daily goal (ml)",
             min_value=1000,
-            max_value=5000,
+            max_value=6000,
             value=2500,
             step=100
         )
