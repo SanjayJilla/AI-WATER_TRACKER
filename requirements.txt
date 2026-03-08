@@ -5,7 +5,12 @@ langchain-openai
 groq>=0.5.0
 
 pandas==2.0.3
-
+streamlit
+langchain
+langchain-openai
+groq
+python-dotenv
+pandas
 
 
 sqlalchemy==2.0.27
