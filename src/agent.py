@@ -1,28 +1,38 @@
 import os
-from langchain_openai import ChatOpenAI, OpenAI
-from langchain_core.messages import HumanMessage
 from dotenv import load_dotenv
-from langchain_groq import ChatGroq
+from groq import Groq
+
 load_dotenv()
 
-#OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-#llm=ChatOpenAI(model="gpt-3.5-turbo", temperature=0.5, openai_api_key=OPENAI_API_KEY)
-llm=ChatGroq(model="llama-3.1-8b-instant", temperature=0.5, groq_api_key=GROQ_API_KEY)
-
 class WaterIntakeAgent:
-    def __init__(self):
-        self.history=[]
+    def __init__(self, model="openai/gpt-oss-20b"):
+        self.history = []
+        self.api_key = GROQ_API_KEY or os.getenv("GROQ_API_KEY")
+        self.model = model
+        self.client = Groq(api_key=self.api_key) if self.api_key else None
+
     def analyze_intake(self, intake):
-        prompt=f"""
-        You are a hydration assisstant.The User has consumed  {intake} ml of water today. 
-        provide a hydration status and suggest if they need to drink more water.But keep the response concise and actionable.
-        Give a brief analysis of their hydration level based on the intake and provide a recommendation."""
-        response=llm.invoke([HumanMessage(content=prompt)])
-        return response.content.strip()
-if __name__=="__main__":
-    agent=WaterIntakeAgent()
-    intake=1500
-    result=agent.analyze_intake(intake)
-    print(f"Hydration Analysis: {result}")
+        if not self.client:
+            return f"Hydration Status: You logged {intake} ml. Please configure GROQ_API_KEY in your .env file for AI insights."
+
+        prompt = f"""You are a hydration assistant. The user has consumed {intake} ml of water today.
+Provide a concise, actionable hydration status and suggest if they need to drink more water."""
+        
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.5,
+                max_tokens=250
+            )
+            return response.choices[0].message.content.strip()
+        except Exception as e:
+            return f"Logged {intake} ml. (AI analysis unavailable: {str(e)})"
+
+if __name__ == "__main__":
+    agent = WaterIntakeAgent()
+    intake = 1500
+    result = agent.analyze_intake(intake)
+    print(f"Hydration Analysis:\n{result}")
